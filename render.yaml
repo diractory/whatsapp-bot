@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: radhey-whatsapp-ai-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: BOT_PREFIX
+        value: .
+      - key: OWNER_NAME
+        value: RADHEY
+      - key: OWNER_TELEGRAM
+        value: t.me/youradhey
+      - key: OWNER_NUMBER
+        value: "919395137349"
+      - key: SESSION_DIR
+        value: auth_info
+      - key: DEFAULT_AI_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+    disk:
+      name: whatsapp-session
+      mountPath: /opt/render/project/src/auth_info
+      sizeGB: 1

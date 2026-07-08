@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RADHEY — Bot Uplink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0E0F22;
+    --panel:#161832;
+    --panel-line:#2A2D54;
+    --amber:#FFB454;
+    --teal:#5EEAD4;
+    --text:#EDEBF7;
+    --muted:#8A8CB3;
+    --danger:#FF7A7A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(94,234,212,0.08), transparent 40%),
+      radial-gradient(circle at 80% 85%, rgba(255,180,84,0.10), transparent 45%),
+      var(--void);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .wrap{
+    width:100%;
+    max-width:460px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    color:var(--teal);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:800;
+    font-size:28px;
+    text-align:center;
+    margin:0 0 6px;
+    letter-spacing:0.02em;
+  }
+  h1 span{color:var(--amber);}
+  .sub{
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:32px;
+    line-height:1.5;
+  }
+  .dial{
+    position:relative;
+    width:320px;
+    height:320px;
+    margin:0 auto 28px;
+    border-radius:24px;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .ring{
+    position:absolute;
+    inset:14px;
+    border-radius:18px;
+    border:1px dashed rgba(94,234,212,0.35);
+    animation:spin 18s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .sweep{
+    position:absolute;
+    inset:0;
+    background:conic-gradient(from 0deg, transparent 0%, rgba(255,180,84,0.18) 8%, transparent 16%);
+    animation:sweep 3.2s linear infinite;
+  }
+  @keyframes sweep{ to{ transform:rotate(360deg); } }
+  .qr-box{
+    position:relative;
+    z-index:2;
+    width:236px;
+    height:236px;
+    background:#fff;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 0 0 6px rgba(255,255,255,0.04), 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .qr-box img{
+    width:100%;
+    height:100%;
+    border-radius:10px;
+  }
+  .state-msg{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--muted);
+    text-align:center;
+    padding:0 20px;
+  }
+  .badge{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--muted);
+    box-shadow:0 0 0 0 rgba(255,180,84,0.6);
+    animation:pulse 1.6s infinite;
+  }
+  .dot.qr{background:var(--amber);}
+  .dot.connected{background:var(--teal); animation:none;}
+  .dot.disconnected{background:var(--danger);}
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(255,180,84,0.55);}
+    70%{ box-shadow:0 0 0 10px rgba(255,180,84,0);}
+    100%{ box-shadow:0 0 0 0 rgba(255,180,84,0);}
+  }
+  .steps{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.9;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:14px;
+    padding:18px 20px;
+  }
+  .steps b{color:var(--text);}
+  .footer{
+    text-align:center;
+    margin-top:24px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.15em;
+    color:var(--muted);
+    text-transform:uppercase;
+  }
+  .footer b{color:var(--amber);}
+  .connected-box{
+    text-align:center;
+  }
+  .connected-box .big{
+    font-size:52px;
+    margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Signal Uplink</div>
+    <h1>RADHEY <span>BOT</span></h1>
+    <div class="sub">Point your phone's WhatsApp camera at the frequency below to bring the bot online.</div>
+
+    <div class="badge">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">TUNING IN...</span>
+    </div>
+
+    <div class="dial">
+      <div class="ring"></div>
+      <div class="sweep" id="sweep"></div>
+      <div class="qr-box" id="qrBox">
+        <div class="state-msg" id="qrMsg">Waking up the bot…</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <b>1.</b> Open WhatsApp on your phone<br/>
+      <b>2.</b> Tap Settings → Linked Devices → Link a Device<br/>
+      <b>3.</b> Scan the code above<br/>
+      <b>4.</b> This page updates automatically once you're connected
+    </div>
+
+    <div class="footer">Master: <b>#RADHEY</b> · t.me/youradhey</div>
+  </div>
+
+<script>
+  const qrBox = document.getElementById('qrBox');
+  const qrMsg = document.getElementById('qrMsg');
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  const sweep = document.getElementById('sweep');
+
+  async function poll(){
+    try{
+      const res = await fetch('/api/status');
+      const data = await res.json();
+
+      statusDot.className = 'dot ' + data.status;
+
+      if(data.status === 'connected'){
+        statusText.textContent = 'CONNECTED';
+        sweep.style.display = 'none';
+        qrBox.innerHTML = '<div class="connected-box"><div class="big">✅</div><div class="state-msg">Bot is live on WhatsApp<br/>' + (data.user || '') + '</div></div>';
+      } else if(data.status === 'qr'){
+        statusText.textContent = 'AWAITING SCAN';
+        sweep.style.display = 'block';
+        qrBox.innerHTML = '<img src="/api/qr-image?t=' + Date.now() + '" alt="QR code" />';
+      } else if(data.status === 'disconnected'){
+        statusText.textContent = 'RECONNECTING...';
+        qrBox.innerHTML = '<div class="state-msg">Connection dropped.<br/>Retrying automatically…</div>';
+      } else {
+        statusText.textContent = 'TUNING IN...';
+        qrBox.innerHTML = '<div class="state-msg">Waking up the bot…</div>';
+      }
+    }catch(e){
+      statusText.textContent = 'OFFLINE';
+    }
+  }
+
+  poll();
+  setInterval(poll, 3000);
+</script>
+</body>
+</html>

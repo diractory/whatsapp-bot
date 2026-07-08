@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+
+# WhatsApp session/auth data (NEVER commit this — it's your login session)
+auth_info/
+auth_info_baileys/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Bot data store
+src/store/*.json
+!src/store/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Render
+.render/

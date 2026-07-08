@@ -1,0 +1,29 @@
+{
+  "name": "radhey-whatsapp-ai-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp AI bot powered by Baileys + Express, deployable on Render. Master: RADHEY",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "@hapi/boom": "^10.0.1",
+    "express": "^4.19.2",
+    "qrcode": "^1.5.4",
+    "pino": "^9.3.2",
+    "dotenv": "^16.4.5",
+    "axios": "^1.7.7",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "author": "RADHEY (t.me/youradhey)",
+  "license": "MIT"
+}
